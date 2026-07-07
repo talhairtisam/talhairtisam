@@ -2,8 +2,8 @@ export const SECTION_IDS = [
   "hero",
   "about",
   "experience",
-  "skills",
   "projects",
+  "skills",
   "testimonials",
   "contact",
 ] as const;

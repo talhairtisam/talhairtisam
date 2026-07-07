@@ -1,8 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import { SECTION_IDS } from "@/lib/constants";
+import { usePointer } from "@/context/pointer-context";
 import { useEnhancementsEnabled } from "@/lib/performance";
 import { HumanoidCharacter } from "@/components/avatar/humanoid-character";
 
@@ -42,27 +51,58 @@ function useActiveSectionIndex() {
 }
 
 export function FloatingCompanion() {
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const reducedMotion = useReducedMotion();
   const enhancements = useEnhancementsEnabled();
   const activeSection = useActiveSectionIndex();
-  const { scrollY, scrollYProgress } = useScroll();
+  const { scrollYProgress } = useScroll();
+  const { clientX, clientY, enabled: pointerEnabled } = usePointer();
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [blink, setBlink] = useState(false);
-
   const animate = enhancements && !reducedMotion;
 
-  const floatY = useTransform(scrollY, [0, 1400], [0, -56]);
-  const driftX = useTransform(scrollYProgress, [0, 0.35, 0.7, 1], [0, -10, 6, -4]);
-  const headTilt = useTransform(scrollYProgress, [0, 0.5, 1], [0, 4, -3]);
-  const springY = useSpring(floatY, { stiffness: 110, damping: 20 });
-  const springX = useSpring(driftX, { stiffness: 90, damping: 18 });
-  const springTilt = useSpring(headTilt, { stiffness: 120, damping: 22 });
+  const companionLookX = useMotionValue(0);
+  const companionLookY = useMotionValue(0);
+  const springLookX = useSpring(companionLookX, { stiffness: 240, damping: 18 });
+  const springLookY = useSpring(companionLookY, { stiffness: 240, damping: 18 });
 
-  const lookX = useTransform(scrollYProgress, [0, 0.2, 0.45, 0.7, 1], [-2.5, 3, -1.5, 2.5, 0]);
-  const lookY = useTransform(scrollYProgress, [0, 0.5, 1], [0, -1.5, 0.8]);
-  const springLookX = useSpring(lookX, { stiffness: 200, damping: 22 });
-  const springLookY = useSpring(lookY, { stiffness: 200, damping: 22 });
+  function updateCompanionLook(mx: number, my: number) {
+    const el = buttonRef.current;
+    if (!el || !pointerEnabled) return;
+
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height * 0.34;
+    const dx = mx - cx;
+    const dy = my - cy;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < 2) {
+      companionLookX.set(0);
+      companionLookY.set(0);
+      return;
+    }
+
+    const t = Math.min(dist / 90, 1);
+    const max = 8;
+    companionLookX.set((dx / dist) * t * max);
+    companionLookY.set((dy / dist) * t * max);
+  }
+
+  useMotionValueEvent(clientX, "change", (mx) => updateCompanionLook(mx, clientY.get()));
+  useMotionValueEvent(clientY, "change", (my) => updateCompanionLook(clientX.get(), my));
+  useMotionValueEvent(scrollYProgress, "change", () => {
+    updateCompanionLook(clientX.get(), clientY.get());
+  });
+
+  const dropY = useTransform(scrollYProgress, [0, 0.2, 0.55, 1], [0, 16, 44, 72]);
+  const dropTilt = useTransform(scrollYProgress, [0, 0.45, 1], [0, 4, 10]);
+  const driftX = useTransform(scrollYProgress, [0, 0.35, 0.7, 1], [0, -8, 5, -3]);
+
+  const springDropY = useSpring(dropY, { stiffness: 65, damping: 11, mass: 0.9 });
+  const springTilt = useSpring(dropTilt, { stiffness: 85, damping: 14 });
+  const springX = useSpring(driftX, { stiffness: 90, damping: 18 });
 
   const accent = SECTION_COLORS[activeSection] ?? SECTION_COLORS[0];
 
@@ -90,13 +130,14 @@ export function FloatingCompanion() {
   return (
     <div className="fixed right-2 bottom-4 z-[var(--z-companion)] sm:right-5 sm:bottom-7">
       <motion.button
+        ref={buttonRef}
         type="button"
         onClick={hop}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         aria-label="Portfolio guide — click to jump to the next section"
         className="relative block cursor-pointer border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-        style={animate ? { x: springX, y: springY, rotate: springTilt } : undefined}
+        style={animate ? { x: springX, y: springDropY, rotate: springTilt } : undefined}
         animate={
           clicked
             ? { scale: [1, 1.1, 1], y: [0, -8, 0] }

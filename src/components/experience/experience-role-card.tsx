@@ -1,0 +1,101 @@
+"use client";
+
+import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import type { ExperienceItem } from "@/data/types";
+import { DrawBorder } from "@/components/motion/draw-border";
+import { cn } from "@/lib/utils";
+
+type ExperienceRoleCardProps = {
+  job: ExperienceItem;
+  index: number;
+};
+
+export function ExperienceRoleCard({ job, index }: ExperienceRoleCardProps) {
+  const [expanded, setExpanded] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const isOpen = expanded || hovered;
+
+  return (
+    <DrawBorder
+      className="transition-shadow duration-300 hover:shadow-[0_0_32px_var(--glow)]"
+      innerClassName="p-6 md:p-7"
+    >
+      <article
+        className="outline-none"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onClick={() => setExpanded((v) => !v)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setExpanded((v) => !v);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-expanded={isOpen}
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            {job.promoted && (
+              <span className="mb-2 inline-block rounded-full bg-accent-lime/10 px-3 py-0.5 font-mono text-xs text-accent-lime">
+                Promoted to Senior
+              </span>
+            )}
+            <h3 className="text-xl font-bold">{job.title}</h3>
+            <p className="text-sm text-accent-cyan">{job.company}</p>
+            <p className="text-xs text-text-muted">
+              {job.location} · {job.period}
+            </p>
+          </div>
+          <span className="font-mono text-2xl text-text-muted/30">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        </div>
+
+        <p className="mt-3 text-sm text-text-muted">{job.summary}</p>
+
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              key="details"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+            >
+              <ul className="mt-4 space-y-2 border-t border-border/60 pt-4">
+                {job.highlights.map((h) => (
+                  <li key={h.slice(0, 48)} className="text-sm text-text-muted">
+                    <span className="mr-2 text-accent-violet">▹</span>
+                    {h}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {job.tech.slice(0, 10).map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] text-text-muted"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <p
+          className={cn(
+            "mt-3 font-mono text-[10px] uppercase tracking-wider text-accent-cyan/70 lg:hidden",
+          )}
+        >
+          Tap for details
+        </p>
+      </article>
+    </DrawBorder>
+  );
+}

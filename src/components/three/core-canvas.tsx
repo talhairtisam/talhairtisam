@@ -2,7 +2,8 @@
 
 import { Suspense, useState, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
-import { useReducedMotion } from "motion/react";
+import { useMotionValue, useMotionValueEvent, useReducedMotion } from "motion/react";
+import { usePointerOptional } from "@/context/pointer-context";
 import { CoreScene } from "./core-scene";
 import { CorePoster } from "./core-poster";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,7 @@ type CoreCanvasProps = {
   scrollProgress?: number;
   activeSection?: number;
   interactive?: boolean;
+  useGlobalPointer?: boolean;
 };
 
 export function CoreCanvas({
@@ -21,21 +23,43 @@ export function CoreCanvas({
   scrollProgress = 0,
   activeSection = 0,
   interactive = true,
+  useGlobalPointer = false,
 }: CoreCanvasProps) {
   const reducedMotion = useReducedMotion();
-  const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const pointerCtx = usePointerOptional();
+  const fallbackX = useMotionValue(0);
+  const fallbackY = useMotionValue(0);
+  const [localPointer, setLocalPointer] = useState({ x: 0, y: 0 });
+  const [globalPointer, setGlobalPointer] = useState({ x: 0, y: 0 });
+
+  const normX = pointerCtx?.normX ?? fallbackX;
+  const normY = pointerCtx?.normY ?? fallbackY;
+
+  useMotionValueEvent(normX, "change", (x: number) => {
+    if (useGlobalPointer && pointerCtx) {
+      setGlobalPointer((p) => ({ ...p, x }));
+    }
+  });
+
+  useMotionValueEvent(normY, "change", (y: number) => {
+    if (useGlobalPointer && pointerCtx) {
+      setGlobalPointer((p) => ({ ...p, y }));
+    }
+  });
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!interactive) return;
+      if (!interactive || useGlobalPointer) return;
       const rect = e.currentTarget.getBoundingClientRect();
-      setPointer({
+      setLocalPointer({
         x: ((e.clientX - rect.left) / rect.width - 0.5) * 2,
         y: -((e.clientY - rect.top) / rect.height - 0.5) * 2,
       });
     },
-    [interactive],
+    [interactive, useGlobalPointer],
   );
+
+  const pointer = useGlobalPointer ? globalPointer : localPointer;
 
   if (reducedMotion) {
     return <CorePoster className={cn("flex items-center justify-center", className)} />;

@@ -2,11 +2,14 @@
 
 import { ThemeProvider } from "./theme-provider";
 import { LenisProvider } from "./lenis-provider";
+import { PointerProvider } from "@/context/pointer-context";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
-      <LenisProvider>{children}</LenisProvider>
+      <PointerProvider>
+        <LenisProvider>{children}</LenisProvider>
+      </PointerProvider>
     </ThemeProvider>
   );
 }

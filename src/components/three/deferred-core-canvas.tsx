@@ -14,18 +14,31 @@ type DeferredCoreCanvasProps = {
   size?: "hero" | "mini";
   className?: string;
   interactive?: boolean;
+  scrollProgress?: number;
+  activeSection?: number;
+  useGlobalPointer?: boolean;
 };
 
 export function DeferredCoreCanvas({
   size = "hero",
   className,
   interactive = true,
+  scrollProgress = 0,
+  activeSection = 0,
+  useGlobalPointer = false,
 }: DeferredCoreCanvasProps) {
   return (
     <DeferredEnhancements
       fallback={<CorePoster className={cn("flex h-full w-full items-center justify-center", className)} />}
     >
-      <CoreCanvas size={size} className={className} interactive={interactive} />
+      <CoreCanvas
+        size={size}
+        className={className}
+        interactive={interactive}
+        scrollProgress={scrollProgress}
+        activeSection={activeSection}
+        useGlobalPointer={useGlobalPointer}
+      />
     </DeferredEnhancements>
   );
 }

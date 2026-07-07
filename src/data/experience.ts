@@ -6,6 +6,8 @@ export const experience: ExperienceItem[] = [
     company: "Ultracodes Pvt. Ltd.",
     location: "Lahore, Pakistan",
     period: "May 2024 – Present",
+    summary:
+      "Technical Lead for AI backends and TechBazaar — 4-portal e-commerce ecosystem at scale.",
     highlights: [
       "Architected AI-powered backend services for Delivery AI using Django and FastAPI on AWS — web scraping pipelines and data infrastructure for a real-time dish recommendation engine and conversational chatbot.",
       "Led architecture and delivery for TechBazaar as Technical Lead of a 6-engineer team across a 4-portal ecosystem serving 3,000+ sellers and 100,000+ live products.",
@@ -36,6 +38,8 @@ export const experience: ExperienceItem[] = [
     company: "Ultracodes Pvt. Ltd.",
     location: "Lahore, Pakistan",
     period: "April 2022 – May 2024",
+    summary:
+      "Full-stack MERN engineer — subscriptions, real-time notifications, and payment integrations.",
     promoted: true,
     highlights: [
       "Architected TechBazaar's subscription management module and product listing system from scratch across the MERN stack.",

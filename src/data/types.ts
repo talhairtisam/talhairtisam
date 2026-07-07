@@ -15,6 +15,7 @@ export type ExperienceItem = {
   company: string;
   location: string;
   period: string;
+  summary: string;
   promoted?: boolean;
   highlights: string[];
   tech: string[];

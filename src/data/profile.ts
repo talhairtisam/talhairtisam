@@ -19,8 +19,8 @@ export const profile = {
 export const navSections = [
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
-  { id: "skills", label: "Skills" },
   { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
   { id: "testimonials", label: "Recommendations" },
   { id: "contact", label: "Contact" },
 ];
