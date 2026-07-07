@@ -88,7 +88,7 @@ export function FloatingCompanion() {
     activeSection === 0 ? 18 : activeSection === 3 ? -12 : activeSection === 4 ? 32 : hovered ? 24 : -6;
 
   return (
-    <div className="fixed right-2 bottom-4 z-40 sm:right-5 sm:bottom-7">
+    <div className="fixed right-2 bottom-4 z-[var(--z-companion)] sm:right-5 sm:bottom-7">
       <motion.button
         type="button"
         onClick={hop}

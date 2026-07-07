@@ -6,3 +6,4 @@ export * from "./skills";
 export * from "./socials";
 export * from "./testimonials";
 export * from "./linkedin-recommendations";
+export * from "./tech-stack";

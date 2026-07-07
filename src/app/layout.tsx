@@ -3,6 +3,7 @@ import { Syne, JetBrains_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import { Navbar } from "@/components/layout/navbar";
 import { CursorGlow } from "@/components/layout/cursor-glow";
+import { LeftRail } from "@/components/layout/left-rail";
 import { FloatingCompanion } from "@/components/layout/floating-companion";
 import { SITE_URL } from "@/lib/constants";
 import { profile } from "@/data";
@@ -84,9 +85,10 @@ export default function RootLayout({
         />
         <AppProviders>
           <CursorGlow />
+          <LeftRail />
           <Navbar />
           <FloatingCompanion />
-          <main>{children}</main>
+          <main className="main-with-rail">{children}</main>
         </AppProviders>
       </body>
     </html>

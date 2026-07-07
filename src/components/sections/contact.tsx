@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { profile, socialLinks } from "@/data";
+import { SocialIcon } from "@/components/icons/social-icon";
+import { MagneticButton } from "@/components/ui/magnetic-button";
 import { Reveal } from "@/components/motion/reveal";
 
 export function ContactSection() {
@@ -33,28 +35,30 @@ export function ContactSection() {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <motion.button
-            type="button"
-            onClick={copyEmail}
-            whileTap={{ scale: 0.97 }}
-            className="mt-8 inline-flex items-center gap-2 rounded-full border border-border bg-bg-elevated px-6 py-3 font-mono text-sm transition-colors hover:border-accent-cyan/50"
-          >
-            {copied ? "✓ Copied!" : profile.email}
-          </motion.button>
+          <div className="mt-8 flex justify-center">
+            <MagneticButton variant="secondary" onClick={copyEmail}>
+              {copied ? "✓ Copied!" : profile.email}
+            </MagneticButton>
+          </div>
         </Reveal>
 
         <Reveal delay={0.3}>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
+          <p className="mt-8 hidden font-mono text-xs text-text-muted lg:block">
+            Social links are on the left rail — or connect below
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3 lg:mt-4 lg:scale-95 lg:opacity-70">
             {socialLinks.map((link) => (
-              <a
+              <motion.a
                 key={link.name}
                 href={link.href}
                 target={link.href.startsWith("mailto") ? undefined : "_blank"}
                 rel="noopener noreferrer"
-                className="rounded-full border border-border px-4 py-2 font-mono text-xs text-text-muted transition-all hover:border-accent-violet/50 hover:text-text"
+                whileHover={{ y: -2, scale: 1.04 }}
+                className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 font-mono text-xs text-text-muted transition-all hover:border-accent-violet/50 hover:text-text"
               >
+                <SocialIcon name={link.name} size={14} />
                 {link.name}
-              </a>
+              </motion.a>
             ))}
           </div>
         </Reveal>

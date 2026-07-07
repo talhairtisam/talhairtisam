@@ -58,9 +58,17 @@ export type LinkedInRecommendation = {
   relationship: string;
   quotePreview: string;
   linkedInUrl: string;
+  profileUrl: string;
+  avatar?: string;
 };
 
 export type NavSection = {
   id: string;
   label: string;
+};
+
+export type TechStackItem = {
+  name: string;
+  slug: string;
+  href?: string;
 };

@@ -1,13 +1,16 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { testimonials, linkedInRecommendations } from "@/data";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Reveal } from "@/components/motion/reveal";
+import { cn } from "@/lib/utils";
 
 export function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const hasTestimonials = testimonials.length > 0;
   const cards = [
@@ -41,6 +44,26 @@ export function TestimonialsSection() {
     });
   }
 
+  useEffect(() => {
+    const nodes = cardRefs.current.filter(Boolean) as HTMLElement[];
+    if (!nodes.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.getAttribute("data-index"));
+            if (!Number.isNaN(index)) setActiveIndex(index);
+          }
+        });
+      },
+      { root: scrollRef.current, threshold: 0.6 },
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [cards.length]);
+
   return (
     <section id="testimonials" className="section-padding">
       <div className="container-main">
@@ -57,8 +80,20 @@ export function TestimonialsSection() {
           {cards.map((card, i) => (
             <Reveal key={card.id} delay={i * 0.1}>
               <motion.article
+                ref={(el) => {
+                  cardRefs.current[i] = el;
+                }}
+                data-index={i}
                 whileHover={{ y: -4 }}
-                className="gradient-border w-[min(340px,85vw)] shrink-0 snap-start rounded-2xl p-6 md:p-8"
+                animate={{
+                  scale: activeIndex === i ? 1.03 : 0.97,
+                }}
+                transition={{ type: "spring", stiffness: 280, damping: 24 }}
+                className={cn(
+                  "gradient-border w-[min(340px,85vw)] shrink-0 snap-center rounded-2xl p-6 md:p-8",
+                  activeIndex === i &&
+                    "ring-2 ring-accent-violet/40 shadow-[0_0_32px_var(--glow)]",
+                )}
               >
                 <p className="mb-4 text-sm leading-relaxed text-text-muted">
                   &ldquo;{card.quote}&rdquo;

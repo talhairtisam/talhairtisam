@@ -34,7 +34,7 @@ export function CursorGlow() {
 
   return (
     <div
-      className="pointer-events-none fixed z-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl transition-opacity duration-300"
+      className="pointer-events-none fixed z-[var(--z-cursor)] h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl transition-opacity duration-300"
       style={{
         left: pos.x,
         top: pos.y,

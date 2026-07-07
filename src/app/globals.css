@@ -9,6 +9,11 @@
   --accent-cyan: #00d4ff;
   --accent-violet: #8b5cf6;
   --accent-lime: #a3e635;
+  --left-rail-width: 4.5rem;
+  --z-cursor: 30;
+  --z-rail: 40;
+  --z-companion: 45;
+  --z-navbar: 50;
   --gradient-accent: linear-gradient(
     135deg,
     var(--accent-cyan),
@@ -138,6 +143,12 @@ body {
   width: 100%;
   max-width: 72rem;
   margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .main-with-rail {
+    padding-left: var(--left-rail-width);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

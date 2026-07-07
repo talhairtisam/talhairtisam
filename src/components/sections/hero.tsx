@@ -1,17 +1,28 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { profile } from "@/data";
 import { LetterReveal } from "@/components/motion/letter-reveal";
 import { TypewriterRoles } from "@/components/motion/typewriter-roles";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { DeferredCoreCanvas } from "@/components/three/deferred-core-canvas";
 import { useEnhancementsEnabled } from "@/lib/performance";
-import { motion } from "motion/react";
-import { useEffect, useState } from "react";
 
 export function HeroSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [showHint, setShowHint] = useState(true);
   const enhancements = useEnhancementsEnabled();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 72]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0.15]);
+  const canvasY = useTransform(scrollYProgress, [0, 1], [0, 48]);
+  const ctaOpacity = useTransform(scrollYProgress, [0, 0.28], [1, 0]);
 
   useEffect(() => {
     function onScroll() {
@@ -28,10 +39,14 @@ export function HeroSection() {
   return (
     <section
       id="hero"
+      ref={sectionRef}
       className="relative flex min-h-[100dvh] items-center overflow-hidden pt-16"
     >
       <div className="container-main grid items-center gap-8 px-5 py-12 md:grid-cols-2 md:gap-12 md:px-8">
-        <div className="relative z-10">
+        <motion.div
+          className="relative z-10"
+          style={enhancements ? { y: textY, opacity: textOpacity } : undefined}
+        >
           <p className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-accent-cyan">
             {profile.availability}
           </p>
@@ -48,20 +63,26 @@ export function HeroSection() {
             {profile.summary.slice(0, 160)}…
           </p>
 
-          <div className="flex flex-wrap gap-4">
+          <motion.div
+            className="flex flex-wrap gap-4"
+            style={enhancements ? { opacity: ctaOpacity } : undefined}
+          >
             <MagneticButton onClick={() => scrollTo("projects")}>
               View Work
             </MagneticButton>
             <MagneticButton variant="secondary" onClick={() => scrollTo("contact")}>
               Get in Touch
             </MagneticButton>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="relative h-[280px] sm:h-[360px] md:h-[480px] lg:h-[560px]">
+        <motion.div
+          className="relative h-[280px] sm:h-[360px] md:h-[480px] lg:h-[560px]"
+          style={enhancements ? { y: canvasY } : undefined}
+        >
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent-cyan/10 via-transparent to-accent-violet/10 blur-2xl" />
           <DeferredCoreCanvas size="hero" className="h-full w-full" interactive />
-        </div>
+        </motion.div>
       </div>
 
       {showHint && enhancements && (
