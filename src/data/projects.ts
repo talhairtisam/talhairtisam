@@ -56,18 +56,46 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    slug: "az-character-recognition",
-    title: "AZ Character Recognition",
-    subtitle: "ML Computer Vision Project",
-    context: "Personal / Academic · github.com/talhairtisam",
+    slug: "notification-rnd",
+    title: "Real-Time Notification R&D",
+    subtitle: "Marketplace Notification System Prototype",
+    context: "Open Source · github.com/talhairtisam",
     description:
-      "Machine learning project for alphabet character recognition using computer vision techniques.",
-    stack: ["Python", "Machine Learning", "Computer Vision"],
-    metrics: ["Dataset preparation", "Model training", "Evaluation pipeline"],
-    role: "Solo developer — end-to-end ML pipeline from data prep to model evaluation.",
-    problem: "Classify alphabet characters from images with a trained computer vision model.",
+      "R&D prototype for a real-time notification system with Marketplace and core backend/frontend implementations — exploring event-driven delivery patterns applied in production at TechBazaar.",
+    stack: ["TypeScript", "JavaScript", "Node.js", "WebSockets", "React", "HTML", "CSS"],
+    metrics: ["Marketplace variant", "Core platform variant", "Full-stack prototype"],
+    role: "Solo developer — built backend and frontend notification flows as research ahead of the production TechBazaar notification system.",
+    problem:
+      "Validate real-time notification delivery patterns across marketplace and admin portals before shipping to production.",
     architecture:
-      "Python ML pipeline with dataset preparation, model training, and evaluation metrics.",
+      "Separate backend and frontend services with dedicated Marketplace modules, TypeScript services, and WebSocket-oriented notification flows.",
+    repoUrl: "https://github.com/talhairtisam/notification-rnd-project",
+    featured: true,
+  },
+  {
+    slug: "multic-client-upload",
+    title: "Multi-Client Upload",
+    subtitle: "Session-Based Cross-Device File Sync",
+    context: "Open Source R&D · github.com/talhairtisam",
+    description:
+      "R&D system for sharing files and images from one device with real-time reflection on another. Session-scoped with no authentication — one device creates a session ID, another joins via link while the session is valid. Both devices can run pre-upload actions in sync before the file is sent.",
+    stack: ["JavaScript", "Node.js", "WebSockets", "Real-Time Sync", "Session Management"],
+    metrics: ["Cross-device sync", "Session-only auth", "Pre-upload actions"],
+    role: "Solo developer — designed the session model, real-time sync protocol, and full-stack prototype for cross-device upload flows.",
+    problem:
+      "Users needed to pick or edit files on one device and see changes instantly on another, without accounts — only a shared session.",
+    architecture:
+      "Session ID links two clients for the lifetime of the session. WebSocket (or similar real-time channel) propagates file state and pre-upload actions between backend and both frontends.",
+    repoUrls: [
+      {
+        label: "Backend",
+        url: "https://github.com/talhairtisam/multic-client-upload-backend_demo",
+      },
+      {
+        label: "Frontend",
+        url: "https://github.com/talhairtisam/multic-client-upload-frontend_demo",
+      },
+    ],
     featured: true,
   },
 ];

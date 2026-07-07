@@ -99,6 +99,21 @@ export default async function ProjectPage({ params }: Props) {
             </div>
           </section>
         </Reveal>
+
+        {(project.repoUrls?.length ? project.repoUrls : project.repoUrl ? [{ label: "GitHub", url: project.repoUrl }] : []).map(
+          (link) => (
+            <Reveal key={link.url} delay={0.4}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 mr-6 inline-flex font-mono text-sm text-accent-cyan hover:underline"
+              >
+                {link.label} on GitHub →
+              </a>
+            </Reveal>
+          ),
+        )}
       </div>
     </article>
   );

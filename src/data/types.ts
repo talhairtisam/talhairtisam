@@ -31,6 +31,8 @@ export type Project = {
   role: string;
   problem: string;
   architecture: string;
+  repoUrl?: string;
+  repoUrls?: { label: string; url: string }[];
   featured?: boolean;
 };
 

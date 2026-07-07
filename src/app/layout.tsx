@@ -3,6 +3,7 @@ import { Syne, JetBrains_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import { Navbar } from "@/components/layout/navbar";
 import { CursorGlow } from "@/components/layout/cursor-glow";
+import { FloatingCompanion } from "@/components/layout/floating-companion";
 import { SITE_URL } from "@/lib/constants";
 import { profile } from "@/data";
 import "./globals.css";
@@ -84,6 +85,7 @@ export default function RootLayout({
         <AppProviders>
           <CursorGlow />
           <Navbar />
+          <FloatingCompanion />
           <main>{children}</main>
         </AppProviders>
       </body>

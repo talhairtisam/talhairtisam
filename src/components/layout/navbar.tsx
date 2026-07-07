@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { navSections } from "@/data";
 import { ThemeToggle } from "./theme-toggle";
-import { MiniCore } from "./mini-core";
 import { cn } from "@/lib/utils";
 import { SECTION_IDS } from "@/lib/constants";
 
@@ -12,13 +11,10 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     function onScroll() {
       const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(docHeight > 0 ? scrollTop / docHeight : 0);
       setScrolled(scrollTop > 40);
 
       const sections = SECTION_IDS.map((id) => document.getElementById(id));
@@ -40,11 +36,6 @@ export function Navbar() {
   function scrollTo(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileOpen(false);
-  }
-
-  function spinCore() {
-    const core = document.getElementById("hero");
-    core?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -87,11 +78,6 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-2">
-            <MiniCore
-              scrollProgress={scrollProgress}
-              activeSection={activeSection}
-              onClick={spinCore}
-            />
             <ThemeToggle />
             <button
               type="button"

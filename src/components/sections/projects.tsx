@@ -15,7 +15,7 @@ export function ProjectsSection() {
         <SectionHeader
           label="Projects"
           title="Featured work"
-          subtitle="Production systems I've architected and shipped."
+          subtitle="Production systems and open-source work."
         />
 
         {/* Mobile: stacked */}

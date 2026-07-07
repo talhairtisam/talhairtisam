@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useEnhancementsEnabled } from "@/lib/performance";
 
 export function CursorGlow() {
+  const enhancements = useEnhancementsEnabled();
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (!enhancements) return;
+
     const finePointer = window.matchMedia("(pointer: fine)").matches;
     if (!finePointer) return;
 
@@ -24,9 +28,9 @@ export function CursorGlow() {
       window.removeEventListener("mousemove", onMove);
       document.body.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [enhancements]);
 
-  if (!visible) return null;
+  if (!enhancements || !visible) return null;
 
   return (
     <div

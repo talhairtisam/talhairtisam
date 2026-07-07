@@ -1,18 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const CoreCanvas = dynamic(
-  () => import("@/components/three/core-canvas").then((m) => m.CoreCanvas),
-  { ssr: false },
-);
+import { CorePoster } from "@/components/three/core-poster";
 
 export function NotFoundContent() {
   return (
     <div className="flex min-h-[80dvh] flex-col items-center justify-center px-5 text-center">
       <div className="mb-8 h-32 w-32">
-        <CoreCanvas size="mini" className="h-full w-full" interactive={false} />
+        <CorePoster className="h-full w-full" />
       </div>
       <h1 className="text-6xl font-bold gradient-text">404</h1>
       <p className="mt-4 text-text-muted">This node isn&apos;t in the graph.</p>
