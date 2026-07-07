@@ -2,10 +2,12 @@
 
 import { Fragment, useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
 import { letterReveal } from "@/lib/motion";
 
 export function LetterReveal({ text, className }: { text: string; className?: string }) {
   const reducedMotion = useReducedMotion();
+  const motionReady = useEnhancementAtLeast("motion");
   const words = text.split(" ");
 
   const wordOffsets = useMemo(() => {
@@ -21,7 +23,7 @@ export function LetterReveal({ text, className }: { text: string; className?: st
     }, []);
   }, [words]);
 
-  if (reducedMotion) {
+  if (!motionReady || reducedMotion) {
     return <span className={className}>{text}</span>;
   }
 
@@ -34,7 +36,7 @@ export function LetterReveal({ text, className }: { text: string; className?: st
               <motion.span
                 key={`${char}-${i}`}
                 custom={wordOffsets[wordIndex] + i}
-                initial="hidden"
+                initial="visible"
                 animate="visible"
                 variants={letterReveal}
                 className="inline-block"

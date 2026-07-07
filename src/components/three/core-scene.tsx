@@ -3,6 +3,7 @@
 import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useDeviceTier } from "@/lib/performance";
 
 type CoreSceneProps = {
   size?: "hero" | "mini";
@@ -28,6 +29,46 @@ function getNodePositions(count: number, radius: number): THREE.Vector3[] {
   return positions;
 }
 
+function PulseRings({
+  nodes,
+  color,
+  size,
+}: {
+  nodes: THREE.Vector3[];
+  color: THREE.Color;
+  size: "hero" | "mini";
+}) {
+  const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const ringSize = size === "mini" ? 0.04 : 0.06;
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    meshRefs.current.forEach((mesh, i) => {
+      if (!mesh) return;
+      const pulse = (Math.sin(t * 2 + i * 0.5) + 1) / 2;
+      mesh.scale.setScalar(0.5 + pulse * 0.5);
+      (mesh.material as THREE.MeshBasicMaterial).opacity = 0.2 + pulse * 0.4;
+    });
+  });
+
+  return (
+    <>
+      {nodes.map((node, i) => (
+        <mesh
+          key={i}
+          ref={(el) => {
+            meshRefs.current[i] = el;
+          }}
+          position={node}
+        >
+          <sphereGeometry args={[ringSize, 8, 8]} />
+          <meshBasicMaterial color={color} transparent opacity={0.3} />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
 export function CoreScene({
   size = "hero",
   scrollProgress = 0,
@@ -36,20 +77,33 @@ export function CoreScene({
   pointer = { x: 0, y: 0 },
 }: CoreSceneProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const nodeCount = size === "mini" ? 16 : 32;
+  const tier = useDeviceTier();
+  const nodeCount =
+    size === "mini"
+      ? tier === "high"
+        ? 16
+        : 12
+      : tier === "high"
+        ? 32
+        : tier === "medium"
+          ? 24
+          : 16;
   const radius = size === "mini" ? 1.2 : 2.2;
 
   const nodes = useMemo(() => getNodePositions(nodeCount, radius), [nodeCount, radius]);
 
-  const sectionColors = [
-    new THREE.Color("#22d3ee"),
-    new THREE.Color("#a78bfa"),
-    new THREE.Color("#bef264"),
-    new THREE.Color("#22d3ee"),
-    new THREE.Color("#a78bfa"),
-    new THREE.Color("#bef264"),
-    new THREE.Color("#22d3ee"),
-  ];
+  const sectionColors = useMemo(
+    () => [
+      new THREE.Color("#22d3ee"),
+      new THREE.Color("#a78bfa"),
+      new THREE.Color("#bef264"),
+      new THREE.Color("#22d3ee"),
+      new THREE.Color("#a78bfa"),
+      new THREE.Color("#bef264"),
+      new THREE.Color("#22d3ee"),
+    ],
+    [],
+  );
 
   const activeColor = sectionColors[activeSection % sectionColors.length];
 
@@ -107,38 +161,7 @@ export function CoreScene({
         <sphereGeometry args={[0.12, 16, 16]} />
         <meshBasicMaterial color="#a78bfa" transparent opacity={0.8} />
       </mesh>
-      {nodes.map((node, i) => (
-        <PulseRing key={i} position={node} index={i} color={activeColor} size={size} />
-      ))}
+      <PulseRings nodes={nodes} color={activeColor} size={size} />
     </group>
-  );
-}
-
-function PulseRing({
-  position,
-  index,
-  color,
-  size,
-}: {
-  position: THREE.Vector3;
-  index: number;
-  color: THREE.Color;
-  size: "hero" | "mini";
-}) {
-  const ref = useRef<THREE.Mesh>(null);
-  const ringSize = size === "mini" ? 0.04 : 0.06;
-
-  useFrame((state) => {
-    if (!ref.current) return;
-    const pulse = (Math.sin(state.clock.elapsedTime * 2 + index * 0.5) + 1) / 2;
-    ref.current.scale.setScalar(0.5 + pulse * 0.5);
-    (ref.current.material as THREE.MeshBasicMaterial).opacity = 0.2 + pulse * 0.4;
-  });
-
-  return (
-    <mesh ref={ref} position={position}>
-      <sphereGeometry args={[ringSize, 8, 8]} />
-      <meshBasicMaterial color={color} transparent opacity={0.3} />
-    </mesh>
   );
 }

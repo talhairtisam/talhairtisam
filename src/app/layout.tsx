@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { Syne, JetBrains_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import { Navbar } from "@/components/layout/navbar";
-import { CursorGlow } from "@/components/layout/cursor-glow";
-import { CursorDot } from "@/components/layout/cursor-dot";
 import { LeftRail } from "@/components/layout/left-rail";
-import { FloatingCompanion } from "@/components/layout/floating-companion";
+import { DeferredHeavyUi } from "@/components/layout/deferred-heavy-ui";
 import { SITE_URL } from "@/lib/constants";
 import { profile } from "@/data";
 import "./globals.css";
@@ -85,11 +83,9 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <AppProviders>
-          <CursorGlow />
-          <CursorDot />
+          <DeferredHeavyUi />
           <LeftRail />
           <Navbar />
-          <FloatingCompanion />
           <main className="main-with-rail">{children}</main>
         </AppProviders>
       </body>

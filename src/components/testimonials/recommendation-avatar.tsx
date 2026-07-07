@@ -42,6 +42,8 @@ export function RecommendationAvatar({
           alt={name}
           width={size}
           height={size}
+          sizes={`${size}px`}
+          loading="lazy"
           className="size-full rounded-full object-cover"
         />
       ) : (

@@ -6,7 +6,6 @@ import {
   RecommendationCard,
   type RecommendationCardData,
 } from "@/components/testimonials/recommendation-card";
-import { SectionHeader } from "@/components/ui/section-header";
 
 function buildCards(): RecommendationCardData[] {
   const cards: RecommendationCardData[] = [
@@ -46,7 +45,7 @@ function buildCards(): RecommendationCardData[] {
   return cards;
 }
 
-export function TestimonialsSection() {
+export function TestimonialsTrack() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -73,42 +72,32 @@ export function TestimonialsSection() {
   }, [cards.length]);
 
   return (
-    <section id="testimonials" className="section-padding overflow-hidden">
-      <div className="container-main">
-        <SectionHeader
-          label="Recommendations"
-          title="What people say"
-          subtitle="LinkedIn recommendations from colleagues and teammates."
-        />
+    <div className="relative min-h-[min(420px,62vh)] overflow-hidden">
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-bg to-transparent md:w-12"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-bg to-transparent md:w-12"
+        aria-hidden
+      />
 
-        <div className="relative min-h-[min(420px,62vh)] overflow-hidden">
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-bg to-transparent md:w-12"
-            aria-hidden
+      <div
+        ref={scrollRef}
+        className="recommendation-track flex h-[392px] items-stretch gap-4 overflow-x-auto overflow-y-hidden pb-3 snap-x snap-mandatory md:gap-5"
+      >
+        {cards.map((card, i) => (
+          <RecommendationCard
+            key={card.id}
+            ref={(el) => {
+              cardRefs.current[i] = el;
+            }}
+            card={card}
+            index={i}
+            active={activeIndex === i}
           />
-          <div
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-bg to-transparent md:w-12"
-            aria-hidden
-          />
-
-          <div
-            ref={scrollRef}
-            className="recommendation-track flex h-[392px] items-stretch gap-4 overflow-x-auto overflow-y-hidden pb-3 snap-x snap-mandatory md:gap-5"
-          >
-            {cards.map((card, i) => (
-              <RecommendationCard
-                key={card.id}
-                ref={(el) => {
-                  cardRefs.current[i] = el;
-                }}
-                card={card}
-                index={i}
-                active={activeIndex === i}
-              />
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }

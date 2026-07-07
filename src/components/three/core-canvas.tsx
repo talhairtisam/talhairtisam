@@ -4,6 +4,7 @@ import { Suspense, useState, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
 import { useMotionValue, useMotionValueEvent, useReducedMotion } from "motion/react";
 import { usePointerOptional } from "@/context/pointer-context";
+import { useDeviceTier } from "@/lib/performance";
 import { CoreScene } from "./core-scene";
 import { CorePoster } from "./core-poster";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ export function CoreCanvas({
   useGlobalPointer = false,
 }: CoreCanvasProps) {
   const reducedMotion = useReducedMotion();
+  const tier = useDeviceTier();
   const pointerCtx = usePointerOptional();
   const fallbackX = useMotionValue(0);
   const fallbackY = useMotionValue(0);
@@ -60,6 +62,7 @@ export function CoreCanvas({
   );
 
   const pointer = useGlobalPointer ? globalPointer : localPointer;
+  const dpr: [number, number] = tier === "high" ? [1, 1.5] : [1, 1.25];
 
   if (reducedMotion) {
     return <CorePoster className={cn("flex items-center justify-center", className)} />;
@@ -73,8 +76,8 @@ export function CoreCanvas({
     >
       <Canvas
         camera={{ position: [0, 0, size === "mini" ? 4 : 6], fov: 45 }}
-        dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true }}
+        dpr={dpr}
+        gl={{ antialias: tier === "high", alpha: true }}
         style={{ background: "transparent" }}
       >
         <Suspense fallback={null}>

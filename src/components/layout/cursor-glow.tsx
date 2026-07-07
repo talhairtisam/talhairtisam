@@ -1,43 +1,59 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useEnhancementsEnabled } from "@/lib/performance";
+import { useEffect, useRef, useState } from "react";
+import { useMotionValue, useMotionValueEvent } from "motion/react";
+import { usePointerOptional } from "@/context/pointer-context";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
+import { cn } from "@/lib/utils";
 
 export function CursorGlow() {
-  const enhancements = useEnhancementsEnabled();
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const heavy = useEnhancementAtLeast("heavy");
+  const pointer = usePointerOptional();
+  const glowRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const fallbackX = useMotionValue(0);
+  const fallbackY = useMotionValue(0);
+  const clientX = pointer?.clientX ?? fallbackX;
+  const clientY = pointer?.clientY ?? fallbackY;
+
+  function moveGlow(x: number, y: number) {
+    if (!glowRef.current) return;
+    glowRef.current.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+  }
+
+  useMotionValueEvent(clientX, "change", (x) => {
+    if (!pointer?.enabled) return;
+    setVisible(true);
+    moveGlow(x, clientY.get());
+  });
+
+  useMotionValueEvent(clientY, "change", (y) => {
+    if (!pointer?.enabled) return;
+    setVisible(true);
+    moveGlow(clientX.get(), y);
+  });
 
   useEffect(() => {
-    if (!enhancements) return;
+    if (!heavy) return;
 
-    const finePointer = window.matchMedia("(pointer: fine)").matches;
-    if (!finePointer) return;
-
-    function onMove(e: MouseEvent) {
-      setPos({ x: e.clientX, y: e.clientY });
-      setVisible(true);
-    }
     function onLeave() {
       setVisible(false);
     }
 
-    window.addEventListener("mousemove", onMove);
     document.body.addEventListener("mouseleave", onLeave);
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      document.body.removeEventListener("mouseleave", onLeave);
-    };
-  }, [enhancements]);
+    return () => document.body.removeEventListener("mouseleave", onLeave);
+  }, [heavy]);
 
-  if (!enhancements || !visible) return null;
+  if (!heavy || !pointer?.enabled) return null;
 
   return (
     <div
-      className="pointer-events-none fixed z-[var(--z-cursor)] h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl transition-opacity duration-300"
+      ref={glowRef}
+      className={cn(
+        "pointer-events-none fixed left-0 top-0 z-[var(--z-cursor)] h-64 w-64 rounded-full blur-3xl will-change-transform transition-opacity duration-300",
+        visible ? "opacity-30" : "opacity-0",
+      )}
       style={{
-        left: pos.x,
-        top: pos.y,
         background:
           "radial-gradient(circle, var(--accent-cyan) 0%, var(--accent-violet) 50%, transparent 70%)",
       }}

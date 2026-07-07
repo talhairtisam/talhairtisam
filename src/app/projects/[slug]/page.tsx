@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects, getProjectBySlug } from "@/data";
-import { Reveal } from "@/components/motion/reveal";
+import { ProjectReveal } from "@/components/projects/project-reveal";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -27,6 +27,12 @@ export default async function ProjectPage({ params }: Props) {
   const project = getProjectBySlug(slug);
   if (!project) notFound();
 
+  const repoLinks = project.repoUrls?.length
+    ? project.repoUrls
+    : project.repoUrl
+      ? [{ label: "GitHub", url: project.repoUrl }]
+      : [];
+
   return (
     <article className="section-padding pt-24">
       <div className="container-main max-w-3xl">
@@ -37,13 +43,13 @@ export default async function ProjectPage({ params }: Props) {
           ← Back to projects
         </Link>
 
-        <Reveal>
+        <ProjectReveal>
           <p className="font-mono text-xs text-accent-cyan">{project.context}</p>
           <h1 className="mt-2 text-4xl font-bold md:text-5xl">{project.title}</h1>
           <p className="mt-2 text-xl text-text-muted">{project.subtitle}</p>
-        </Reveal>
+        </ProjectReveal>
 
-        <Reveal delay={0.1}>
+        <ProjectReveal delay={0.1}>
           <div className="mt-6 flex flex-wrap gap-2">
             {project.metrics.map((m) => (
               <span
@@ -54,37 +60,37 @@ export default async function ProjectPage({ params }: Props) {
               </span>
             ))}
           </div>
-        </Reveal>
+        </ProjectReveal>
 
-        <Reveal delay={0.15}>
+        <ProjectReveal delay={0.15}>
           <section className="mt-12">
             <h2 className="mb-3 text-lg font-semibold">Overview</h2>
-            <p className="text-text-muted leading-relaxed">{project.description}</p>
+            <p className="leading-relaxed text-text-muted">{project.description}</p>
           </section>
-        </Reveal>
+        </ProjectReveal>
 
-        <Reveal delay={0.2}>
+        <ProjectReveal delay={0.2}>
           <section className="mt-10">
             <h2 className="mb-3 text-lg font-semibold">Problem</h2>
-            <p className="text-text-muted leading-relaxed">{project.problem}</p>
+            <p className="leading-relaxed text-text-muted">{project.problem}</p>
           </section>
-        </Reveal>
+        </ProjectReveal>
 
-        <Reveal delay={0.25}>
+        <ProjectReveal delay={0.25}>
           <section className="mt-10">
             <h2 className="mb-3 text-lg font-semibold">Architecture</h2>
-            <p className="text-text-muted leading-relaxed">{project.architecture}</p>
+            <p className="leading-relaxed text-text-muted">{project.architecture}</p>
           </section>
-        </Reveal>
+        </ProjectReveal>
 
-        <Reveal delay={0.3}>
+        <ProjectReveal delay={0.3}>
           <section className="mt-10">
             <h2 className="mb-3 text-lg font-semibold">My Role</h2>
-            <p className="text-text-muted leading-relaxed">{project.role}</p>
+            <p className="leading-relaxed text-text-muted">{project.role}</p>
           </section>
-        </Reveal>
+        </ProjectReveal>
 
-        <Reveal delay={0.35}>
+        <ProjectReveal delay={0.35}>
           <section className="mt-10">
             <h2 className="mb-3 text-lg font-semibold">Stack</h2>
             <div className="flex flex-wrap gap-2">
@@ -98,22 +104,20 @@ export default async function ProjectPage({ params }: Props) {
               ))}
             </div>
           </section>
-        </Reveal>
+        </ProjectReveal>
 
-        {(project.repoUrls?.length ? project.repoUrls : project.repoUrl ? [{ label: "GitHub", url: project.repoUrl }] : []).map(
-          (link) => (
-            <Reveal key={link.url} delay={0.4}>
-              <a
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 mr-6 inline-flex font-mono text-sm text-accent-cyan hover:underline"
-              >
-                {link.label} on GitHub →
-              </a>
-            </Reveal>
-          ),
-        )}
+        {repoLinks.map((link) => (
+          <ProjectReveal key={link.url} delay={0.4}>
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 mr-6 inline-flex font-mono text-sm text-accent-cyan hover:underline"
+            >
+              {link.label} on GitHub →
+            </a>
+          </ProjectReveal>
+        ))}
       </div>
     </article>
   );

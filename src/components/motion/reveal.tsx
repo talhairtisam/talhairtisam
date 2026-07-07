@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
 import { fadeUp } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -18,14 +20,29 @@ export function Reveal({
   as = "div",
 }: RevealProps) {
   const reducedMotion = useReducedMotion();
+  const motionReady = useEnhancementAtLeast("motion");
+  const ref = useRef<HTMLElement>(null);
+  const [skipAnimation, setSkipAnimation] = useState(false);
   const Component = motion[as];
 
-  if (reducedMotion) {
-    return <div className={className}>{children}</div>;
+  useEffect(() => {
+    if (!motionReady || reducedMotion || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView) setSkipAnimation(true);
+  }, [motionReady, reducedMotion]);
+
+  if (!motionReady || reducedMotion || skipAnimation) {
+    return (
+      <div ref={ref as React.RefObject<HTMLDivElement>} className={className}>
+        {children}
+      </div>
+    );
   }
 
   return (
     <Component
+      ref={ref as React.Ref<never>}
       className={className}
       initial="hidden"
       whileInView="visible"
@@ -57,8 +74,9 @@ type StaggerProps = {
 
 export function Stagger({ children, className }: StaggerProps) {
   const reducedMotion = useReducedMotion();
+  const motionReady = useEnhancementAtLeast("motion");
 
-  if (reducedMotion) {
+  if (!motionReady || reducedMotion) {
     return <div className={className}>{children}</div>;
   }
 
@@ -85,6 +103,13 @@ export function StaggerItem({
   children: React.ReactNode;
   className?: string;
 }) {
+  const motionReady = useEnhancementAtLeast("motion");
+  const reducedMotion = useReducedMotion();
+
+  if (!motionReady || reducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div className={className} variants={fadeUp}>
       {children}

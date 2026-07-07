@@ -1,10 +1,7 @@
-"use client";
-
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
 import { profile } from "@/data";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Reveal } from "@/components/motion/reveal";
+import { AboutGridBg } from "./about-grid-bg";
 
 const focusAreas = [
   "Full-stack & backend systems",
@@ -13,20 +10,9 @@ const focusAreas = [
 ];
 
 export function AboutSection() {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const gridY = useTransform(scrollYProgress, [0, 1], [0, -60]);
-
   return (
-    <section id="about" ref={ref} className="section-padding relative overflow-hidden">
-      <motion.div
-        style={{ y: gridY }}
-        className="pointer-events-none absolute inset-0 grid-bg opacity-80 dark:opacity-60"
-        aria-hidden
-      />
+    <section id="about" className="section-padding relative overflow-hidden">
+      <AboutGridBg />
 
       <div className="container-main relative">
         <SectionHeader

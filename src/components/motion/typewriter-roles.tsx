@@ -2,23 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "motion/react";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
+import { profile } from "@/data";
 
-const ROLES = [
-  "Senior Software Engineer",
-  "Technical Lead",
-  "AI Backend Engineer",
-];
+const ROLES = profile.roles;
 
 export function TypewriterRoles({ className }: { className?: string }) {
   const reducedMotion = useReducedMotion();
+  const motionReady = useEnhancementAtLeast("motion");
   const [roleIndex, setRoleIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(ROLES[0].length);
   const [deleting, setDeleting] = useState(false);
 
   const currentRole = ROLES[roleIndex];
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (!motionReady || reducedMotion) return;
 
     const timeout = setTimeout(
       () => {
@@ -37,10 +36,10 @@ export function TypewriterRoles({ className }: { className?: string }) {
     );
 
     return () => clearTimeout(timeout);
-  }, [charIndex, deleting, currentRole.length, reducedMotion]);
+  }, [charIndex, deleting, currentRole.length, reducedMotion, motionReady]);
 
-  if (reducedMotion) {
-    return <span className={className}>{ROLES.join(" · ")}</span>;
+  if (!motionReady || reducedMotion) {
+    return <span className={className}>{ROLES[0]}</span>;
   }
 
   return (

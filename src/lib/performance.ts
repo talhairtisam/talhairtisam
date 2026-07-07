@@ -6,26 +6,19 @@ export type DeviceTier = "low" | "medium" | "high";
 
 function getConnectionType(): string | undefined {
   if (typeof navigator === "undefined") return undefined;
-  const conn = (navigator as Navigator & { connection?: { effectiveType?: string; saveData?: boolean } }).connection;
+  const conn = (navigator as Navigator & { connection?: { effectiveType?: string } })
+    .connection;
   return conn?.effectiveType;
-}
-
-function getSaveData(): boolean {
-  if (typeof navigator === "undefined") return false;
-  const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  return Boolean(conn?.saveData);
 }
 
 export function getDeviceTier(): DeviceTier {
   if (typeof window === "undefined") return "medium";
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const saveData = getSaveData();
   const connection = getConnectionType();
   const cores = navigator.hardwareConcurrency ?? 4;
-  const slowConnection = connection === "slow-2g" || connection === "2g" || connection === "3g";
 
-  if (reducedMotion || saveData || slowConnection || cores <= 2) {
+  if (reducedMotion || cores <= 2) {
     return "low";
   }
 
@@ -71,6 +64,12 @@ export function useDeviceTier(): DeviceTier {
 }
 
 export function useEnhancementsEnabled(): boolean {
+  const tier = useDeviceTier();
+  return tier !== "low";
+}
+
+/** @deprecated Prefer useEnhancementAtLeast("light") from enhancement-context */
+export function useLightEnhancements(): boolean {
   const tier = useDeviceTier();
   return tier !== "low";
 }

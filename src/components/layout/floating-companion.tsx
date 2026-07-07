@@ -11,8 +11,8 @@ import {
   useTransform,
 } from "motion/react";
 import { SECTION_IDS } from "@/lib/constants";
-import { usePointer } from "@/context/pointer-context";
-import { useEnhancementsEnabled } from "@/lib/performance";
+import { usePointerOptional } from "@/context/pointer-context";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
 import { HumanoidCharacter } from "@/components/avatar/humanoid-character";
 
 const SECTION_COLORS = [
@@ -53,14 +53,19 @@ function useActiveSectionIndex() {
 export function FloatingCompanion() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const reducedMotion = useReducedMotion();
-  const enhancements = useEnhancementsEnabled();
+  const heavy = useEnhancementAtLeast("heavy");
   const activeSection = useActiveSectionIndex();
   const { scrollYProgress } = useScroll();
-  const { clientX, clientY, enabled: pointerEnabled } = usePointer();
+  const pointer = usePointerOptional();
+  const fallbackX = useMotionValue(0);
+  const fallbackY = useMotionValue(0);
+  const clientX = pointer?.clientX ?? fallbackX;
+  const clientY = pointer?.clientY ?? fallbackY;
+  const pointerEnabled = pointer?.enabled ?? false;
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
   const [blink, setBlink] = useState(false);
-  const animate = enhancements && !reducedMotion;
+  const animate = heavy && !reducedMotion;
 
   const companionLookX = useMotionValue(0);
   const companionLookY = useMotionValue(0);

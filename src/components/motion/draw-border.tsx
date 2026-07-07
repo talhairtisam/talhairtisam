@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
 import { drawLine } from "@/lib/motion";
-import { useEnhancementsEnabled } from "@/lib/performance";
 import { cn } from "@/lib/utils";
 
 type DrawBorderProps = {
@@ -19,25 +19,20 @@ export function DrawBorder({
   radius = 16,
 }: DrawBorderProps) {
   const reducedMotion = useReducedMotion();
-  const enhancements = useEnhancementsEnabled();
-  const animate = enhancements && !reducedMotion;
+  const motionReady = useEnhancementAtLeast("motion");
+  const animate = motionReady && !reducedMotion;
 
   if (!animate) {
     return (
-      <div className={cn("gradient-border rounded-2xl", className)}>
-        <div className={cn("rounded-[inherit] bg-card-bg", innerClassName)}>
-          {children}
-        </div>
+      <div className={cn("rounded-2xl border border-border/40 bg-card-bg", className)}>
+        <div className={cn("rounded-[inherit]", innerClassName)}>{children}</div>
       </div>
     );
   }
 
   return (
     <div className={cn("relative rounded-2xl", className)}>
-      <svg
-        className="pointer-events-none absolute inset-0 size-full"
-        aria-hidden
-      >
+      <svg className="pointer-events-none absolute inset-0 size-full" aria-hidden>
         <motion.rect
           x="1"
           y="1"

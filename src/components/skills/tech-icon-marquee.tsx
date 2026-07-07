@@ -3,12 +3,13 @@
 import { motion, useReducedMotion } from "motion/react";
 import { techStackDock } from "@/data";
 import { TechIcon } from "@/components/icons/tech-icon";
-import { useEnhancementsEnabled } from "@/lib/performance";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
 
 export function TechIconMarquee() {
   const reducedMotion = useReducedMotion();
-  const enhancements = useEnhancementsEnabled();
-  const animate = enhancements && !reducedMotion;
+  const lightReady = useEnhancementAtLeast("light");
+  const motionReady = useEnhancementAtLeast("motion");
+  const animate = motionReady && !reducedMotion;
   const items = [...techStackDock, ...techStackDock];
 
   return (
@@ -20,9 +21,7 @@ export function TechIconMarquee() {
         className="flex w-max gap-5 py-2"
         animate={animate ? { x: ["0%", "-50%"] } : undefined}
         transition={
-          animate
-            ? { duration: 28, repeat: Infinity, ease: "linear" }
-            : undefined
+          animate ? { duration: 28, repeat: Infinity, ease: "linear" } : undefined
         }
       >
         {items.map((item, i) => (
@@ -31,7 +30,11 @@ export function TechIconMarquee() {
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border bg-bg-elevated shadow-sm ring-1 ring-border/60 dark:bg-bg-elevated/90 dark:ring-border/80"
             title={item.name}
           >
-            <TechIcon slug={item.slug} size={22} title={item.name} />
+            {lightReady ? (
+              <TechIcon slug={item.slug} size={22} title={item.name} />
+            ) : (
+              <span className="icon-skeleton size-[22px] rounded-md" aria-hidden />
+            )}
           </div>
         ))}
       </motion.div>

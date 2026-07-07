@@ -1,16 +1,9 @@
-"use client";
-
 import { experience } from "@/data";
-import { ExperienceRoleCard } from "@/components/experience/experience-role-card";
-import { HumanoidCharacter } from "@/components/avatar/humanoid-character";
 import { SectionHeader } from "@/components/ui/section-header";
-import { usePointer } from "@/context/pointer-context";
-import { useEnhancementsEnabled } from "@/lib/performance";
+import { ExperienceRoleCard } from "@/components/experience/experience-role-card";
+import { ExperienceSidebarAvatar } from "./experience-sidebar-avatar";
 
 export function ExperienceSection() {
-  const { lookX, lookY, enabled: pointerEnabled } = usePointer();
-  const enhancements = useEnhancementsEnabled();
-
   return (
     <section id="experience" className="section-padding bg-bg-elevated/30">
       <div className="container-main">
@@ -33,17 +26,7 @@ export function ExperienceSection() {
                 <p className="mt-3 text-sm text-text-muted">
                   Hover a role card to see highlights, tech stack, and impact.
                 </p>
-                <div className="mt-8 flex justify-center">
-                  <div className="scale-[2.4]">
-                    <HumanoidCharacter
-                      accent="var(--accent-violet)"
-                      lookX={enhancements && pointerEnabled ? lookX : undefined}
-                      lookY={enhancements && pointerEnabled ? lookY : undefined}
-                      leftArmRotate={-18}
-                      rightArmRotate={22}
-                    />
-                  </div>
-                </div>
+                <ExperienceSidebarAvatar />
               </div>
             </div>
           </aside>

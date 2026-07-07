@@ -147,6 +147,8 @@ body {
 .section-padding {
   padding: 5rem 1.25rem;
   scroll-margin-top: 5rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
 }
 
 @media (min-width: 768px) {
@@ -165,6 +167,37 @@ body {
   width: 100%;
   max-width: 72rem;
   margin: 0 auto;
+}
+
+.enhancement-slot {
+  position: relative;
+}
+
+.enhancement-layer {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+  pointer-events: none;
+}
+
+.enhancement-layer.is-ready {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.icon-skeleton {
+  display: inline-block;
+  border-radius: 0.25rem;
+  background: var(--border);
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 .core-poster-bg {

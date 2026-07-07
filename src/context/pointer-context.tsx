@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect } from "react";
 import { useMotionValue, useSpring, type MotionValue } from "motion/react";
-import { useEnhancementsEnabled } from "@/lib/performance";
+import { useEnhancementAtLeast } from "@/context/enhancement-context";
 
 export type PointerContextValue = {
   lookX: MotionValue<number>;
@@ -17,7 +17,7 @@ export type PointerContextValue = {
 const PointerContext = createContext<PointerContextValue | null>(null);
 
 export function PointerProvider({ children }: { children: React.ReactNode }) {
-  const enhancements = useEnhancementsEnabled();
+  const heavy = useEnhancementAtLeast("heavy");
   const rawLookX = useMotionValue(0);
   const rawLookY = useMotionValue(0);
   const clientX = useMotionValue(0);
@@ -29,7 +29,7 @@ export function PointerProvider({ children }: { children: React.ReactNode }) {
   const lookY = useSpring(rawLookY, { stiffness: 160, damping: 22 });
 
   useEffect(() => {
-    if (!enhancements) return;
+    if (!heavy) return;
     const finePointer = window.matchMedia("(pointer: fine)").matches;
     if (!finePointer) return;
 
@@ -46,7 +46,7 @@ export function PointerProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, [enhancements, rawLookX, rawLookY, clientX, clientY, pointerNormX, pointerNormY]);
+  }, [heavy, rawLookX, rawLookY, clientX, clientY, pointerNormX, pointerNormY]);
 
   return (
     <PointerContext.Provider
@@ -57,7 +57,7 @@ export function PointerProvider({ children }: { children: React.ReactNode }) {
         clientY,
         normX: pointerNormX,
         normY: pointerNormY,
-        enabled: enhancements,
+        enabled: heavy,
       }}
     >
       {children}
