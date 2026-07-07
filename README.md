@@ -4,6 +4,8 @@
 
 I build scalable backends and full-stack systems — from multi-portal e-commerce platforms serving 100K+ products to AI-powered recommendation engines on AWS. Currently acting as **Technical Lead** for a 6-engineer team at Ultracodes.
 
+🌐 **Portfolio site** — [talhairtisam.vercel.app](https://talhairtisam.vercel.app) *(coming soon)* · source in this repo ([`src/`](./src))
+
 ---
 
 ## 🛠 Tech Stack
