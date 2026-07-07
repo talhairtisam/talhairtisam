@@ -74,3 +74,21 @@ export function useEnhancementsEnabled(): boolean {
   const tier = useDeviceTier();
   return tier !== "low";
 }
+
+function subscribeMdUp(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+
+  const mq = window.matchMedia("(min-width: 768px)");
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getIsMdUp(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(min-width: 768px)").matches;
+}
+
+/** Tailwind `md` breakpoint — desktop/tablet layouts */
+export function useIsMdUp(): boolean {
+  return useSyncExternalStore(subscribeMdUp, getIsMdUp, () => false);
+}

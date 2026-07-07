@@ -7,12 +7,13 @@ import { LetterReveal } from "@/components/motion/letter-reveal";
 import { TypewriterRoles } from "@/components/motion/typewriter-roles";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 import { DeferredCoreCanvas } from "@/components/three/deferred-core-canvas";
-import { useEnhancementsEnabled } from "@/lib/performance";
+import { useEnhancementsEnabled, useIsMdUp } from "@/lib/performance";
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [showHint, setShowHint] = useState(true);
   const enhancements = useEnhancementsEnabled();
+  const isMdUp = useIsMdUp();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -76,13 +77,15 @@ export function HeroSection() {
           </motion.div>
         </motion.div>
 
-        <motion.div
-          className="relative h-[280px] sm:h-[360px] md:h-[480px] lg:h-[560px]"
-          style={enhancements ? { y: canvasY } : undefined}
-        >
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent-cyan/10 via-transparent to-accent-violet/10 blur-2xl" />
-          <DeferredCoreCanvas size="hero" className="h-full w-full" interactive />
-        </motion.div>
+        {isMdUp && (
+          <motion.div
+            className="relative h-[480px] lg:h-[560px]"
+            style={enhancements ? { y: canvasY } : undefined}
+          >
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent-cyan/10 via-transparent to-accent-violet/10 blur-2xl" />
+            <DeferredCoreCanvas size="hero" className="h-full w-full" interactive />
+          </motion.div>
+        )}
       </div>
 
       {showHint && enhancements && (
