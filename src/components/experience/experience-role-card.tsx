@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import type { ExperienceItem } from "@/data/types";
 import { DrawBorder } from "@/components/motion/draw-border";
 import { cn } from "@/lib/utils";
@@ -56,37 +55,33 @@ export function ExperienceRoleCard({ job, index }: ExperienceRoleCardProps) {
 
         <p className="mt-3 text-sm text-text-muted">{job.summary}</p>
 
-        <AnimatePresence initial={false}>
-          {isOpen && (
-            <motion.div
-              key="details"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="overflow-hidden"
-            >
-              <ul className="mt-4 space-y-2 border-t border-border/60 pt-4">
-                {job.highlights.map((h) => (
-                  <li key={h.slice(0, 48)} className="text-sm text-text-muted">
-                    <span className="mr-2 text-accent-violet">▹</span>
-                    {h}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {job.tech.slice(0, 10).map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] text-text-muted"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
+        <div
+          className={cn(
+            "grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
           )}
-        </AnimatePresence>
+        >
+          <div className="min-h-0 overflow-hidden">
+            <ul className="mt-4 space-y-2 border-t border-border/60 pt-4">
+              {job.highlights.map((h) => (
+                <li key={h.slice(0, 48)} className="text-sm text-text-muted">
+                  <span className="mr-2 text-accent-violet">▹</span>
+                  {h}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {job.tech.slice(0, 10).map((t) => (
+                <span
+                  key={t}
+                  className="rounded-full border border-border px-2 py-0.5 font-mono text-[10px] text-text-muted"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
 
         <p
           className={cn(

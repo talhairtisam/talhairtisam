@@ -18,5 +18,12 @@ export const socialLinks: SocialLink[] = [
   },
 ];
 
+/** Desktop left rail — add names here when you add more social links */
+const RAIL_SOCIAL_NAMES = ["GitHub", "LinkedIn"] as const;
+
+export const railSocialLinks = socialLinks.filter((link) =>
+  (RAIL_SOCIAL_NAMES as readonly string[]).includes(link.name),
+);
+
 export const linkedInRecommendationsUrl =
   "https://www.linkedin.com/in/talhairtisam/details/recommendations/";

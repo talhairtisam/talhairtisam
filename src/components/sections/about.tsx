@@ -24,7 +24,7 @@ export function AboutSection() {
     <section id="about" ref={ref} className="section-padding relative overflow-hidden">
       <motion.div
         style={{ y: gridY }}
-        className="pointer-events-none absolute inset-0 grid-bg opacity-60"
+        className="pointer-events-none absolute inset-0 grid-bg opacity-80 dark:opacity-60"
         aria-hidden
       />
 
