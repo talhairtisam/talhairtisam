@@ -26,6 +26,7 @@
   --nav-bg: rgba(248, 247, 244, 0.8);
   --card-bg: rgba(255, 255, 255, 0.7);
   --glow: rgba(0, 212, 255, 0.15);
+  --scrollbar-thumb: var(--accent-violet);
 }
 
 .dark {
@@ -70,6 +71,26 @@
 
 html {
   scroll-behavior: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 6px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--gradient-accent);
+  border-radius: 999px;
+  box-shadow: 0 0 8px var(--glow);
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  box-shadow: 0 0 12px var(--glow), 0 0 4px var(--accent-cyan);
 }
 
 body {
@@ -125,6 +146,7 @@ body {
 
 .section-padding {
   padding: 5rem 1.25rem;
+  scroll-margin-top: 5rem;
 }
 
 @media (min-width: 768px) {
@@ -143,6 +165,39 @@ body {
   width: 100%;
   max-width: 72rem;
   margin: 0 auto;
+}
+
+.recommendation-track {
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+.recommendation-track::-webkit-scrollbar {
+  height: 4px;
+}
+
+.recommendation-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.recommendation-track::-webkit-scrollbar-thumb {
+  background: var(--gradient-accent);
+  border-radius: 999px;
+  box-shadow: 0 0 6px var(--glow);
+}
+
+.recommendation-track::-webkit-scrollbar-thumb:hover {
+  box-shadow: 0 0 10px var(--glow), 0 0 3px var(--accent-cyan);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 @media (min-width: 1024px) {

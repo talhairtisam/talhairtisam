@@ -5,7 +5,6 @@ const SOCIAL_SLUGS: Record<string, string> = {
   GitHub: "github",
   LinkedIn: "linkedin",
   Andela: "andela",
-  Turing: "turing",
 };
 
 type SocialIconProps = {

@@ -43,7 +43,7 @@ export function TiltCard({ children, className }: TiltCardProps) {
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
     >
-      <div className="relative rounded-[inherit] p-6 md:p-8">{children}</div>
+      <div className="relative h-full rounded-[inherit] p-6 md:p-8">{children}</div>
     </motion.div>
   );
 }

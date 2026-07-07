@@ -12,11 +12,6 @@ export const socialLinks: SocialLink[] = [
     label: "linkedin.com/in/talhairtisam",
   },
   {
-    name: "Turing",
-    href: "https://developers.turing.com/talhairtisam",
-    label: "Turing Profile",
-  },
-  {
     name: "Andela",
     href: "https://andela.com",
     label: "Andela Profile",
