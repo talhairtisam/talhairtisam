@@ -12,11 +12,6 @@ export const socialLinks: SocialLink[] = [
     label: "linkedin.com/in/talhairtisam",
   },
   {
-    name: "Andela",
-    href: "https://andela.com",
-    label: "Andela Profile",
-  },
-  {
     name: "Email",
     href: "mailto:talhairtisam457@gmail.com",
     label: "talhairtisam457@gmail.com",

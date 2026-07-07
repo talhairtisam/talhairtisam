@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 const SOCIAL_SLUGS: Record<string, string> = {
   GitHub: "github",
   LinkedIn: "linkedin",
-  Andela: "andela",
 };
 
 type SocialIconProps = {

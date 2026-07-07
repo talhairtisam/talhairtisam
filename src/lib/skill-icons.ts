@@ -1,5 +1,4 @@
 import {
-  siAndela,
   siBitbucket,
   siDjango,
   siDocker,
@@ -72,7 +71,6 @@ const ICON_REGISTRY: Record<string, SimpleIcon> = {
   githubactions: siGithubactions,
   bitbucket: siBitbucket,
   socketdotio: siSocketdotio,
-  andela: siAndela,
 };
 
 function fromSimpleIcon(icon: SimpleIcon): IconData {
