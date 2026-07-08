@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AppProviders } from "@/components/providers/app-providers";
 import { Navbar } from "@/components/layout/navbar";
 import { LeftRail } from "@/components/layout/left-rail";
@@ -90,6 +91,7 @@ export default function RootLayout({
           <main className="main-with-rail">{children}</main>
         </AppProviders>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
