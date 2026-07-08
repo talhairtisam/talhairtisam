@@ -10,4 +10,4 @@ export const SECTION_IDS = [
 
 export type SectionId = (typeof SECTION_IDS)[number];
 
-export const SITE_URL = "https://talhairtisam.vercel.app";
+export const SITE_URL = "https://talhairtisam.dev";
