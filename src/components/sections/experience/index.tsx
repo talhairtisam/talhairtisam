@@ -1,25 +1,8 @@
-import nextDynamic from "next/dynamic";
 import { experience } from "@/data";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ExperienceSidebarAvatar } from "./experience-sidebar-avatar";
-
-const ExperienceRoleCard = nextDynamic(
-  () =>
-    import("@/components/experience/experience-role-card").then((m) => ({
-      default: m.ExperienceRoleCard,
-    })),
-  {
-    loading: () => (
-      <div className="rounded-xl border border-border bg-card-bg/60 p-6 md:p-7" aria-hidden>
-        <div className="h-6 w-1/2 rounded bg-border/60" />
-        <div className="mt-2 h-4 w-1/3 rounded bg-border/40" />
-        <div className="mt-4 h-4 w-full rounded bg-border/30" />
-        <div className="mt-2 h-4 w-11/12 rounded bg-border/30" />
-        <div className="mt-6 h-20 rounded bg-border/20" />
-      </div>
-    ),
-  },
-);
+import { ExperienceStaticCard } from "./experience-static";
+import { ExperienceCardViewport } from "./experience-viewport";
 
 export function ExperienceSection() {
   return (
@@ -51,7 +34,9 @@ export function ExperienceSection() {
 
           <div className="min-w-0 flex-1 space-y-5">
             {experience.map((job, i) => (
-              <ExperienceRoleCard key={job.title + job.period} job={job} index={i} />
+              <ExperienceCardViewport key={job.title + job.period} job={job} index={i}>
+                <ExperienceStaticCard job={job} index={i} />
+              </ExperienceCardViewport>
             ))}
           </div>
         </div>

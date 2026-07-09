@@ -30,8 +30,10 @@ type RecommendationCardProps = {
   active?: boolean;
 };
 
-const CARD_HEIGHT = 380;
-const CARD_WIDTH = "min(340px, 88vw)";
+import {
+  RECOMMENDATION_CARD_HEIGHT,
+  RECOMMENDATION_CARD_WIDTH,
+} from "@/lib/recommendation-layout";
 
 function AvatarSlot({
   card,
@@ -130,7 +132,10 @@ export const RecommendationCard = forwardRef<HTMLElement, RecommendationCardProp
       motionReady && active && "shadow-[0_0_28px_var(--glow)] ring-1 ring-accent-violet/30",
     );
 
-    const style = { height: CARD_HEIGHT, width: CARD_WIDTH };
+    const style = {
+      height: RECOMMENDATION_CARD_HEIGHT,
+      width: RECOMMENDATION_CARD_WIDTH,
+    };
 
     if (!motionReady) {
       return (

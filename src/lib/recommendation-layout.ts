@@ -1,0 +1,4 @@
+export const RECOMMENDATION_CARD_HEIGHT = 380;
+export const RECOMMENDATION_CARD_WIDTH = "min(340px, 88vw)";
+export const RECOMMENDATION_TRACK_HEIGHT = 392;
+export const RECOMMENDATION_SECTION_MIN_HEIGHT = "min(420px, 62vh)";

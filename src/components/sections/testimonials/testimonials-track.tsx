@@ -1,55 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { linkedInRecommendations, testimonials } from "@/data";
+import { buildTestimonialCards } from "@/lib/testimonial-cards";
+import {
+  RECOMMENDATION_SECTION_MIN_HEIGHT,
+  RECOMMENDATION_TRACK_HEIGHT,
+} from "@/lib/recommendation-layout";
 import {
   RecommendationCard,
   type RecommendationCardData,
 } from "@/components/testimonials/recommendation-card";
 
-function buildCards(): RecommendationCardData[] {
-  const cards: RecommendationCardData[] = [
-    ...testimonials.map((t) => ({
-      id: t.id,
-      type: "testimonial" as const,
-      name: t.name,
-      role: `${t.role} · ${t.company}`,
-      quote: t.quote,
-      href: t.href,
-      profileUrl: t.href,
-      avatar: t.avatar,
-    })),
-    ...linkedInRecommendations.map((r) => ({
-      id: r.id,
-      type: "linkedin" as const,
-      name: r.name,
-      role: r.role,
-      quote: r.quotePreview,
-      href: r.linkedInUrl,
-      profileUrl: r.profileUrl,
-      avatar: r.avatar,
-    })),
-  ];
-
-  if (testimonials.length === 0 && linkedInRecommendations.length === 0) {
-    cards.push({
-      id: "placeholder",
-      type: "testimonial",
-      name: "Your testimonial here",
-      role: "Future client or colleague",
-      quote:
-        "Worked with me on a project? Your words could live here. Add entries to src/data/testimonials.ts anytime.",
-    });
-  }
-
-  return cards;
-}
-
 export function TestimonialsTrack() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const cards = buildCards();
+  const cards = buildTestimonialCards() as RecommendationCardData[];
 
   useEffect(() => {
     const nodes = cardRefs.current.filter(Boolean) as HTMLElement[];
@@ -72,7 +38,10 @@ export function TestimonialsTrack() {
   }, [cards.length]);
 
   return (
-    <div className="relative min-h-[min(420px,62vh)] overflow-hidden">
+    <div
+      className="relative overflow-hidden"
+      style={{ minHeight: RECOMMENDATION_SECTION_MIN_HEIGHT }}
+    >
       <div
         className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-bg to-transparent md:w-12"
         aria-hidden
@@ -84,7 +53,8 @@ export function TestimonialsTrack() {
 
       <div
         ref={scrollRef}
-        className="recommendation-track flex h-[392px] items-stretch gap-4 overflow-x-auto overflow-y-hidden pb-3 snap-x snap-mandatory md:gap-5"
+        className="recommendation-track flex items-stretch gap-4 overflow-x-auto overflow-y-hidden pb-3 snap-x snap-mandatory md:gap-5"
+        style={{ height: RECOMMENDATION_TRACK_HEIGHT }}
       >
         {cards.map((card, i) => (
           <RecommendationCard
