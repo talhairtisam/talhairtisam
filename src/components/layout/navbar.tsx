@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { navSections } from "@/data";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
@@ -91,35 +90,29 @@ export function Navbar() {
         </nav>
       </header>
 
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-x-0 top-16 z-40 border-b border-border bg-[var(--nav-bg)] backdrop-blur-xl md:hidden"
-          >
-            <ul className="flex flex-col gap-1 p-4">
-              {navSections.map((section, i) => (
-                <motion.li
-                  key={section.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => scrollTo(section.id)}
-                    className="w-full rounded-lg px-4 py-3 text-left text-sm text-text-muted hover:bg-bg-elevated hover:text-text"
-                  >
-                    {section.label}
-                  </button>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
+      <div
+        className={cn(
+          "fixed inset-x-0 top-16 z-40 border-b border-border bg-[var(--nav-bg)] backdrop-blur-xl transition-all duration-200 md:hidden",
+          mobileOpen
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-2 opacity-0",
         )}
-      </AnimatePresence>
+        aria-hidden={!mobileOpen}
+      >
+        <ul className="flex flex-col gap-1 p-4">
+          {navSections.map((section) => (
+            <li key={section.id}>
+              <button
+                type="button"
+                onClick={() => scrollTo(section.id)}
+                className="w-full rounded-lg px-4 py-3 text-left text-sm text-text-muted transition-colors hover:bg-bg-elevated hover:text-text"
+              >
+                {section.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </>
   );
 }

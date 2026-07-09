@@ -1,4 +1,5 @@
 import { profile } from "@/data";
+import { CopyrightYear } from "@/components/ui/copyright-year";
 import { ContactInteractive } from "./contact-interactive";
 
 export function ContactSection() {
@@ -22,7 +23,7 @@ export function ContactSection() {
 
         <footer className="mt-16 border-t border-border pt-8">
           <p className="font-mono text-xs text-text-muted">
-            © {new Date().getFullYear()} {profile.name}. Built with Next.js.
+            © <CopyrightYear /> {profile.name}. Built with Next.js.
           </p>
         </footer>
       </div>

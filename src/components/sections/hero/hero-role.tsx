@@ -8,6 +8,7 @@ export function HeroRole() {
   return (
     <EnhancementGate
       phase="motion"
+      overlay={false}
       className="h-8 font-mono text-sm text-text-muted md:text-base"
       staticSlot={<span>{profile.roles[0]}</span>}
       enhanced={<TypewriterRoles />}

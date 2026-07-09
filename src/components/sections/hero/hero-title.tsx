@@ -8,8 +8,13 @@ export function HeroTitle() {
   return (
     <EnhancementGate
       phase="motion"
-      staticSlot={<span className="gradient-text">{profile.name}</span>}
-      enhanced={<LetterReveal text={profile.name} className="gradient-text" />}
+      overlay={false}
+      staticSlot={
+        <span className="text-text md:gradient-text">{profile.name}</span>
+      }
+      enhanced={
+        <LetterReveal text={profile.name} className="gradient-text" />
+      }
     />
   );
 }

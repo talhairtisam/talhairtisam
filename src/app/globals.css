@@ -193,6 +193,36 @@ body {
   }
 }
 
+@keyframes rail-link-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.rail-link-enter {
+  animation: rail-link-enter 0.35s ease-out both;
+}
+
+@keyframes hero-scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.hero-scroll-bounce {
+  display: inline-block;
+  animation: hero-scroll-bounce 1.5s ease-in-out infinite;
+}
+
 .icon-skeleton {
   display: inline-block;
   border-radius: 0.25rem;
