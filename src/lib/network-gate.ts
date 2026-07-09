@@ -34,7 +34,8 @@ export function getMaxEnhancementPhase(
   reducedMotion: boolean,
 ): EnhancementPhase {
   if (reducedMotion || tier === "low") return "light";
-  if (tier === "medium") return "motion";
+  // Mobile stays capped at light for LCP/TBT; desktop keeps full enhancements.
+  if (isMobileViewport()) return "light";
   return "heavy";
 }
 
@@ -53,21 +54,20 @@ export const LOAD_TIMING = {
 } as const;
 
 function importMotion() {
-  return import("motion/react");
+  return Promise.all([
+    import("motion/react"),
+    import("@/components/three/core-canvas"),
+  ]);
 }
 
 function importHeavyChunks() {
   return Promise.all([
-    import("@/components/three/core-canvas"),
     import("@/components/layout/floating-companion"),
     import("lenis"),
   ]);
 }
 
 async function importHeavyChunksSequential(onChunkLoaded?: () => void) {
-  await import("@/components/three/core-canvas");
-  onChunkLoaded?.();
-  await delay(LOAD_TIMING.slow.betweenHeavyChunksMs);
   await import("@/components/layout/floating-companion");
   onChunkLoaded?.();
   await delay(LOAD_TIMING.slow.betweenHeavyChunksMs);

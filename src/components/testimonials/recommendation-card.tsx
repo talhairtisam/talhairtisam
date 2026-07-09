@@ -35,23 +35,13 @@ import {
   RECOMMENDATION_CARD_WIDTH,
 } from "@/lib/recommendation-layout";
 
-function AvatarSlot({
-  card,
-  lightReady,
-}: {
-  card: RecommendationCardData;
-  lightReady: boolean;
-}) {
+function AvatarSlot({ card }: { card: RecommendationCardData }) {
   if (!card.profileUrl) {
     return (
       <div className="flex size-12 shrink-0 items-center justify-center rounded-full border border-border bg-bg-elevated font-mono text-xs text-accent-cyan">
         {card.name.slice(0, 2).toUpperCase()}
       </div>
     );
-  }
-
-  if (!lightReady) {
-    return <span className="icon-skeleton size-12 shrink-0 rounded-full" aria-hidden />;
   }
 
   return (
@@ -67,8 +57,7 @@ function AvatarSlot({
 function CardBody({
   card,
   index,
-  lightReady,
-}: Omit<RecommendationCardProps, "active"> & { lightReady: boolean }) {
+}: Omit<RecommendationCardProps, "active">) {
   const accentBar = ACCENT_BARS[index % ACCENT_BARS.length];
 
   return (
@@ -79,7 +68,7 @@ function CardBody({
       />
 
       <div className="flex shrink-0 flex-col items-center text-center">
-        <AvatarSlot card={card} lightReady={lightReady} />
+        <AvatarSlot card={card} />
 
         <div className="mt-3 w-full min-w-0 px-1">
           {card.profileUrl ? (
@@ -124,7 +113,6 @@ function CardBody({
 
 export const RecommendationCard = forwardRef<HTMLElement, RecommendationCardProps>(
   function RecommendationCard({ card, index, active = false }, ref) {
-    const lightReady = useEnhancementAtLeast("light");
     const motionReady = useEnhancementAtLeast("motion");
 
     const className = cn(
@@ -140,7 +128,7 @@ export const RecommendationCard = forwardRef<HTMLElement, RecommendationCardProp
     if (!motionReady) {
       return (
         <article ref={ref} data-index={index} className={className} style={style}>
-          <CardBody card={card} index={index} lightReady={lightReady} />
+          <CardBody card={card} index={index} />
         </article>
       );
     }
@@ -158,7 +146,7 @@ export const RecommendationCard = forwardRef<HTMLElement, RecommendationCardProp
         className={className}
         style={style}
       >
-        <CardBody card={card} index={index} lightReady={lightReady} />
+        <CardBody card={card} index={index} />
       </motion.article>
     );
   },

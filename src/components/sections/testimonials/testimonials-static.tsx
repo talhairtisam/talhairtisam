@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RecommendationAvatar } from "@/components/testimonials/recommendation-avatar";
 import { buildTestimonialCards } from "@/lib/testimonial-cards";
 import {
   RECOMMENDATION_CARD_HEIGHT,
@@ -45,7 +46,12 @@ export function TestimonialsStatic() {
 
               <div className="flex shrink-0 flex-col items-center text-center">
                 {card.profileUrl ? (
-                  <span className="icon-skeleton size-12 shrink-0 rounded-full" aria-hidden />
+                  <RecommendationAvatar
+                    name={card.name}
+                    avatar={card.avatar}
+                    profileUrl={card.profileUrl}
+                    size={48}
+                  />
                 ) : (
                   <div className="flex size-12 shrink-0 items-center justify-center rounded-full border border-border bg-bg-elevated font-mono text-xs text-accent-cyan">
                     {card.name.slice(0, 2).toUpperCase()}

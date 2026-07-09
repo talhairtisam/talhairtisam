@@ -13,7 +13,6 @@ const CoreCanvas = dynamic(
 
 export function HeroDeferred() {
   const motionReady = useEnhancementAtLeast("motion");
-  const heavyReady = useEnhancementAtLeast("heavy");
   const [coreHost, setCoreHost] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -23,7 +22,7 @@ export function HeroDeferred() {
   return (
     <>
       {motionReady && <HeroScrollHint />}
-      {heavyReady &&
+      {motionReady &&
         coreHost &&
         createPortal(
           <div className="absolute inset-0 opacity-0 transition-opacity duration-300 [animation:fade-in_0.3s_ease-out_forwards]">
