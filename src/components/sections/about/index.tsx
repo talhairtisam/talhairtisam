@@ -1,13 +1,33 @@
+import nextDynamic from "next/dynamic";
 import { profile } from "@/data";
 import { SectionHeader } from "@/components/ui/section-header";
-import { Reveal } from "@/components/motion/reveal";
-import { AboutGridBg } from "./about-grid-bg";
 
-const focusAreas = [
-  "Full-stack & backend systems",
-  "AI backends & LLM integrations",
-  "Production architecture & delivery",
-];
+const AboutGridBg = nextDynamic(
+  () => import("./about-grid-bg").then((m) => ({ default: m.AboutGridBg })),
+  {
+    loading: () => (
+      <div className="pointer-events-none absolute inset-0 grid-bg opacity-80 dark:opacity-60" />
+    ),
+  },
+);
+
+const AboutContent = nextDynamic(
+  () => import("./about-content").then((m) => ({ default: m.AboutContent })),
+  {
+    loading: () => (
+      <div className="max-w-3xl" aria-hidden>
+        <div className="h-6 w-full rounded bg-border/30" />
+        <div className="mt-2 h-6 w-11/12 rounded bg-border/30" />
+        <div className="mt-5 h-4 w-44 rounded bg-border/40" />
+        <div className="mt-8 flex flex-wrap gap-2">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <span key={i} className="inline-block h-8 w-52 rounded-full bg-border/40" />
+          ))}
+        </div>
+      </div>
+    ),
+  },
+);
 
 export function AboutSection() {
   return (
@@ -21,27 +41,7 @@ export function AboutSection() {
           subtitle={profile.about}
         />
 
-        <div className="max-w-3xl">
-          <Reveal>
-            <p className="text-lg leading-relaxed text-text-muted">{profile.summary}</p>
-            <p className="mt-4 font-mono text-sm text-accent-cyan">
-              📍 {profile.location}
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.15}>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {focusAreas.map((area) => (
-                <span
-                  key={area}
-                  className="rounded-full border border-border bg-bg-elevated/50 px-3 py-1.5 font-mono text-xs text-text-muted"
-                >
-                  {area}
-                </span>
-              ))}
-            </div>
-          </Reveal>
-        </div>
+        <AboutContent summary={profile.summary} location={profile.location} />
       </div>
     </section>
   );
