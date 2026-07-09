@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AppProviders } from "@/components/providers/app-providers";
 import { Navbar } from "@/components/layout/navbar";
-import { LeftRail } from "@/components/layout/left-rail";
+import { LeftRailSlot } from "@/components/layout/left-rail-slot";
 import { DeferredHeavyUi } from "@/components/layout/deferred-heavy-ui";
 import { SITE_URL } from "@/lib/constants";
 import { profile } from "@/data";
@@ -90,7 +90,7 @@ export default function RootLayout({
         />
         <AppProviders>
           <DeferredHeavyUi />
-          <LeftRail />
+          <LeftRailSlot />
           <Navbar />
           <main className="main-with-rail">{children}</main>
         </AppProviders>

@@ -11,6 +11,16 @@ function getConnectionType(): string | undefined {
   return conn?.effectiveType;
 }
 
+export function isMobileViewport(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(max-width: 767px)").matches;
+}
+
+export function isLgViewport(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(min-width: 1024px)").matches;
+}
+
 export function getDeviceTier(): DeviceTier {
   if (typeof window === "undefined") return "medium";
 
@@ -18,7 +28,7 @@ export function getDeviceTier(): DeviceTier {
   const connection = getConnectionType();
   const cores = navigator.hardwareConcurrency ?? 4;
 
-  if (reducedMotion || cores <= 2) {
+  if (reducedMotion || cores <= 2 || isMobileViewport()) {
     return "low";
   }
 

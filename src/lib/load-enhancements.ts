@@ -1,5 +1,5 @@
 import type { EnhancementPhase } from "@/lib/enhancement-phases";
-import { getDeviceTier, onIdle } from "@/lib/performance";
+import { getDeviceTier, isMobileViewport, onIdle } from "@/lib/performance";
 import {
   getMaxEnhancementPhase,
   getNetworkLoadProfile,
@@ -41,13 +41,27 @@ export function startEnhancementLoader(): () => void {
 
   let cancelled = false;
   const isCancelled = () => cancelled;
+  let removeLoadListener: (() => void) | undefined;
 
   const cancelIdle = onIdle(() => {
-    void prefetchEnhancements(profile, maxPhase, setPhase, isCancelled);
+    const run = () => {
+      if (!isCancelled()) {
+        void prefetchEnhancements(profile, maxPhase, setPhase, isCancelled);
+      }
+    };
+
+    if (isMobileViewport() && document.readyState !== "complete") {
+      window.addEventListener("load", run, { once: true });
+      removeLoadListener = () => window.removeEventListener("load", run);
+      return;
+    }
+
+    run();
   }, idleMs);
 
   return () => {
     cancelled = true;
     cancelIdle();
+    removeLoadListener?.();
   };
 }

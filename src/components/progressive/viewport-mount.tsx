@@ -7,6 +7,7 @@ import {
   type ComponentType,
   type ReactNode,
 } from "react";
+import { isMobileViewport, onIdle } from "@/lib/performance";
 
 type ViewportMountProps<P extends object> = {
   children: ReactNode;
@@ -34,19 +35,31 @@ export function ViewportMount<P extends object>({
     const el = ref.current;
     if (!el || Interactive) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          observer.disconnect();
-          void loader().then((mod) => setInteractive(() => mod.default));
-        }
-      },
-      { rootMargin },
-    );
+    let observer: IntersectionObserver | null = null;
+    let cancelled = false;
 
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [loader, Interactive]);
+    const cancelIdle = onIdle(() => {
+      if (cancelled || !ref.current) return;
+
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting) {
+            observer?.disconnect();
+            void loader().then((mod) => setInteractive(() => mod.default));
+          }
+        },
+        { rootMargin },
+      );
+
+      observer.observe(ref.current);
+    }, isMobileViewport() ? 3000 : 1000);
+
+    return () => {
+      cancelled = true;
+      cancelIdle();
+      observer?.disconnect();
+    };
+  }, [loader, Interactive, rootMargin]);
 
   return (
     <div ref={ref} className={className}>

@@ -7,9 +7,9 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[100dvh] items-center overflow-hidden pt-16"
+      className="relative flex min-h-[100dvh] items-start overflow-hidden pt-20 md:items-center md:pt-16"
     >
-      <div className="container-main grid items-center gap-8 px-5 py-12 md:grid-cols-2 md:gap-12 md:px-8">
+      <div className="container-main grid items-start gap-6 px-5 py-6 md:items-center md:gap-12 md:py-12 md:grid-cols-2 md:px-8">
         <div className="relative z-10">
           <p className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-accent-cyan">
             {profile.availability}
@@ -20,7 +20,7 @@ export function HeroSection() {
           <p className="h-8 font-mono text-sm text-text-muted md:text-base">
             {profile.roles[0]}
           </p>
-          <p className="mb-8 mt-6 max-w-lg text-text-muted">
+          <p className="hero-lcp-text mb-8 mt-6 max-w-lg text-text-muted">
             {profile.summary.slice(0, 160)}…
           </p>
           <div className="flex flex-wrap gap-4">

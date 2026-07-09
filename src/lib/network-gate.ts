@@ -1,4 +1,4 @@
-import type { DeviceTier } from "@/lib/performance";
+import { isMobileViewport, type DeviceTier } from "@/lib/performance";
 import type { EnhancementPhase } from "@/lib/enhancement-phases";
 
 export type NetworkLoadProfile = "fast" | "slow";
@@ -25,15 +25,16 @@ export function isSlowConnection(): boolean {
 
 /** Fast = parallel prefetch; slow = sequential staged loading. */
 export function getNetworkLoadProfile(): NetworkLoadProfile {
-  if (getSaveData() || isSlowConnection()) return "slow";
+  if (getSaveData() || isSlowConnection() || isMobileViewport()) return "slow";
   return "fast";
 }
 
 export function getMaxEnhancementPhase(
-  _tier: DeviceTier,
+  tier: DeviceTier,
   reducedMotion: boolean,
 ): EnhancementPhase {
-  if (reducedMotion) return "light";
+  if (reducedMotion || tier === "low") return "light";
+  if (tier === "medium") return "motion";
   return "heavy";
 }
 
@@ -44,10 +45,10 @@ export const LOAD_TIMING = {
     motionToHeavyMs: 0,
   },
   slow: {
-    idleMs: 900,
-    lightToMotionMs: 1400,
-    motionToHeavyMs: 1800,
-    betweenHeavyChunksMs: 700,
+    idleMs: 1200,
+    lightToMotionMs: 2000,
+    motionToHeavyMs: 2400,
+    betweenHeavyChunksMs: 900,
   },
 } as const;
 

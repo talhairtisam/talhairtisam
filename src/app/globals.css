@@ -113,6 +113,16 @@ body {
   color: transparent;
 }
 
+/* Hero LCP paragraph: system stack paints immediately without waiting on Syne */
+.hero-lcp-text {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
 .gradient-border {
   position: relative;
   background: var(--card-bg);
